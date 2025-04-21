@@ -3,13 +3,20 @@ import os
 from pathlib import Path
 
 # خواندن پسورد از متغیر محیطی
-TABPY_PASSWORD = os.environ.get("TABPY_PASSWORD", "admin:ComplexPass123!")
+TABPY_AUTH = os.environ.get("TABPY_AUTH", "admin:SecurePass123!")
 
-# ایجاد فایل موقت passwords.txt در مسیر مورد نیاز
+# ایجاد فایل passwords.txt با فرمت صحیح
+passwords_content = f"""[users]
+{TABPY_AUTH.split(':')[0]} = {TABPY_AUTH.split(':')[1]}
+
+[roles]
+{TABPY_AUTH.split(':')[0]} = admin
+"""
+
+# ذخیره فایل
 passwords_path = Path(__file__).parent / "passwords.txt"
-passwords_path.write_text(TABPY_PASSWORD)
+passwords_path.write_text(passwords_content)
 
-# تنظیمات اصلی
-config_file = os.path.join(os.path.dirname(__file__), 'tabpy.conf')
-app = TabPyApp(config_file=config_file)
+# اجرای برنامه
+app = TabPyApp(config_file=os.path.join(os.path.dirname(__file__), 'tabpy.conf'))
 application = app._create_wsgi_app()
