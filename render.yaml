@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: tabpy-server
+    runtime: python
+    buildCommand: |
+      pip install -r requirements.txt
+      echo 'admin:admin' > passwords.txt
+    startCommand: gunicorn wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PORT
+        value: 9004
