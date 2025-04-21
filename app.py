@@ -16,5 +16,5 @@ config = {
     }
 }
 
-app = TabPyApp(config_dict=config)
+app = TabPyApp()
 application = app._create_wsgi_app()
