@@ -1,11 +1,20 @@
 from tabpy.tabpy_server.app.app import TabPyApp
 import os
 
-# اضافه کردن لاگ موقت برای بررسی محتویات فایل پسورد
-with open('passwords.txt', 'r') as f:
-    print("=== Password file contents ===")
-    print(f.read())
+# خواندن پسورد از متغیر محیطی
+TABPY_PASSWORD = os.environ.get("TABPY_PASSWORD", "admin:admin")  # مقدار پیشفرض اختیاری
 
-config_file = os.path.join(os.path.dirname(__file__), 'tabpy.conf')
-app = TabPyApp(config_file=config_file)
-app.run()
+# ایجاد config دینامیکی بدون نیاز به فایل passwords.txt
+config = {
+    "TabPy": {
+        "TABPY_PORT": 9004,
+        "TABPY_QUERY_OBJECT_PATH": "./tmp/query_objects",
+        "TABPY_STATIC_PATH": "./static",
+        # تنظیم مستقیم پسورد در config (بدون فایل)
+        "TABPY_PWD_FILE": None,  # غیرفعال کردن فایل پسورد
+        "TABPY_PASSWORD": TABPY_PASSWORD  # انتقال پسورد به تنظیمات
+    }
+}
+
+app = TabPyApp(config_dict=config)
+application = app._create_wsgi_app()
