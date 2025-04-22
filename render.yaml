@@ -4,7 +4,7 @@ services:
     runtime: python
     buildCommand: |
       pip install -r requirements.txt
-      echo admin:admin > passwords.txt
+      echo admin:admin > passwords
     startCommand: gunicorn wsgi:application --bind 0.0.0.0:$PORT --timeout 180
     envVars:
       - key: PORT
